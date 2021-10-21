@@ -310,6 +310,12 @@ endif
 PROGS_ALWAYS = ./afl-cc ./afl-compiler-rt.o ./afl-compiler-rt-32.o ./afl-compiler-rt-64.o 
 PROGS        = $(PROGS_ALWAYS) ./afl-llvm-pass.so ./SanitizerCoveragePCGUARD.so ./split-compares-pass.so ./split-switches-pass.so ./cmplog-routines-pass.so ./cmplog-instructions-pass.so ./cmplog-switches-pass.so ./afl-llvm-dict2file.so ./compare-transform-pass.so ./afl-ld-lto ./afl-llvm-lto-instrumentlist.so ./afl-llvm-lto-instrumentation.so ./SanitizerCoverageLTO.so
 
+# wasm fuzzing: disable thread-local storage and unset LLVM debug flag
+ifdef WAFL_MODE
+  $(info Compiling libraries for use with WAVM)
+  CLANG_CPPFL += -DNDEBUG -DNO_TLS
+endif
+
 # If prerequisites are not given, warn, do not build anything, and exit with code 0
 ifeq "$(LLVMVER)" ""
   NO_BUILD = 1
